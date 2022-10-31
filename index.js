@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const Student = require('./models/student');
 const { Parser } = require('json2csv');
 const exceljs = require('exceljs');
+const moment = require('moment');
 
 mongoose.connect('mongodb://localhost:27017/Student-DB', {
     useNewUrlParser: true,
@@ -14,10 +15,10 @@ mongoose.connect('mongodb://localhost:27017/Student-DB', {
 
 })
     .then(() => {
-        console.log("We are Connected!!!");
+        console.log("Database Connected!!!");
     })
     .catch((err) => {
-        console.log("Oh connection err!!!");
+        console.log("ERROR! Connecting to Database.");
         console.log(err);
     });
 
@@ -26,6 +27,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.engine('ejs', engine);
 app.use(methodOverride('_method'));
+app.locals.moment = require('moment');
 
 
 app.get('/idform', (req, res) => {
@@ -46,6 +48,8 @@ app.post('/student/search', async (req, res) => {
                 res.send('Not Found');
             }
             else
+                // output.bdate = moment(output.bdate).toString();
+                // console.log(output.bdate);
                 res.render('search', { output });
         }
     }).clone().catch(function (err) { console.log(err) });
@@ -65,7 +69,7 @@ app.get('/getcsv', async (req, res) => {
             else {
                 const json2csvParser = new Parser();
                 const csv = json2csvParser.parse(output);
-                console.log(output);
+                //console.log(output);
 
                 res.attachment('student info.csv');
                 res.status(200).send(csv);
@@ -78,7 +82,7 @@ app.get('/getcsv', async (req, res) => {
 
 app.get('/student/:id/edit', async (req, res) => {
     const student = await Student.findById({ _id: req.params.id });
-    console.log(student);
+    //console.log(student);
     res.render('edit', { student });
 
 });
@@ -93,10 +97,11 @@ app.post('/student', async (req, res) => {
     }
     else
         res.send("Not Found");*/
-
+    
+    //console.log(req.body.bdate);
     const student = new Student(req.body);
     await student.save();
-    res.render('summary');
+    res.render('summary', {student});
 });
 
 app.get('/students', async (req, res) => {
@@ -157,5 +162,5 @@ app.get('/student/export', async(req, res)=>{
 });
 
 app.listen(3000, () => {
-    console.log('Listening on PORT 3000');
+    console.log('Serving on PORT 3000');
 });
