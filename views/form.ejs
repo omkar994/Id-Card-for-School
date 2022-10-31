@@ -1,0 +1,75 @@
+<html>
+
+<head>
+    <title>ID Card Form</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+    <form action="/student" method="POST">
+        <div class="col-6 offset-3">
+            <div class="mb-3">
+                <label for="class" class="form-label">Class</label>
+                <select id="class" name="class">
+                    <option value=1>I</option>
+                    <option value=2>II</option>
+                    <option value=3>III</option>
+                    <option value=4>IV</option>
+                    <option value=5>V</option>
+                    <option value=6>VI</option>
+                    <option value=7>VII</option>
+                    <option value=8>VIII</option>
+                    <option value=9>IX</option>
+                    <option value=10>X</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="division" class="form-label">Division</label>
+                <select id="class" name="division">
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                    <option value="E">E</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="rollNo">Roll No</label>
+                <input type="number" name="rollNo" id="rollNo" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="stduName" class="form-label">Student Name</label>
+                <input type="text" name="stduName" id="stduName" class="form-control" >
+            </div>
+
+            <div class="mb-3">
+                <label for="bdate" class="form-label">Birth Date</label>
+                <input type="date" id="bdate" name="bdate" class="form-control" >
+            </div>
+
+            <div class="mb-3">
+                <label for="bloodGrp" class="form-label">Blood Group</label>
+                <input type="text" name="bloodGrp" id="bloodGrp" class="form-control" >
+            </div>
+
+            <div class="mb-3">
+                <label for="contactNo" class="form-label">Contact No.</label>
+                <input type="number" name="contactNo" id="contactNo" class="form-control" >
+            </div>
+
+            <div class="mb-3">
+                <label for="address" class="form-label">Address</label>
+                <textarea type="text" name="address" id="address" class="form-control" ></textarea>
+            </div>
+
+            <button class="btn btn-success">Submit</button>
+
+        </div>
+
+    </form>
+</body>
+
+</html>
