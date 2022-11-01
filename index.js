@@ -48,8 +48,6 @@ app.post('/student/search', async (req, res) => {
                 res.send('Not Found');
             }
             else
-                // output.bdate = moment(output.bdate).toString();
-                // console.log(output.bdate);
                 res.render('search', { output });
         }
     }).clone().catch(function (err) { console.log(err) });
@@ -69,8 +67,6 @@ app.get('/getcsv', async (req, res) => {
             else {
                 const json2csvParser = new Parser();
                 const csv = json2csvParser.parse(output);
-                //console.log(output);
-
                 res.attachment('student info.csv');
                 res.status(200).send(csv);
             }
@@ -88,20 +84,17 @@ app.get('/student/:id/edit', async (req, res) => {
 });
 
 app.post('/student', async (req, res) => {
-    /*const { rollNo } = req.params;
-    const studentRoll = await Student.findById(rollNo);
-    console.log(studentRoll);
-
-    if(studentRoll){
-        res.send("Found");
+    const stduClass = req.body.class;
+    const { division, rollNo } = req.body;
+    const student = await Student.find({ rollNo: rollNo, class: stduClass, division: division });
+    if (student.length !== 0) {
+        res.send('Already Registered');
     }
-    else
-        res.send("Not Found");*/
-    
-    //console.log(req.body.bdate);
-    const student = new Student(req.body);
-    await student.save();
-    res.render('summary', {student});
+    else {
+        const student = new Student(req.body);
+        await student.save();
+        res.render('summary', { student });
+    }
 });
 
 app.get('/students', async (req, res) => {
@@ -115,30 +108,30 @@ app.put('/student/:id', async (req, res) => {
     res.redirect('/students');
 });
 
-app.get('/student/export', async(req, res)=>{
-    try
-    {
+app.get('/student/export', async (req, res) => {
+    try {
         const workbook = new exceljs.Workbook();
         const worksheet = workbook.addWorksheet('Students');
 
         worksheet.columns = [
-            {headers : 'Name', key: 'stduName'},
-            {headers : 'Class', key: 'class'},
-            {headers : 'Division', key: 'division'},
-            {headers : 'Birth Date', key: 'bdate'},
-            {headers : 'Blood Group', key: 'bloodGrp'},
-            {headers : 'Contact', key: 'contactNo'},
-            {headers : 'Address', key: 'address'}
+            { headers: 'Name', key: 'stduName' },
+            { headers: 'Class', key: 'class' },
+            { headers: 'Division', key: 'division' },
+            { headers: 'Photo Ref', key: 'photoRefNo' },
+            { headers: 'Birth Date', key: 'bdate' },
+            { headers: 'Blood Group', key: 'bloodGrp' },
+            { headers: 'Contact', key: 'contactNo' },
+            { headers: 'Address', key: 'address' }
         ];
 
-        const students =await Student.find({});
+        const students = await Student.find({});
 
         students.forEach((student) => {
             worksheet.addRow(student);
         });
 
         worksheet.getRow(1).eachCell((cell) => {
-            cell.font = { bold:true };
+            cell.font = { bold: false };
         });
 
         res.setHeader(
@@ -152,11 +145,11 @@ app.get('/student/export', async(req, res)=>{
             `attachment; filename=students.xlsx`
         );
 
-        return workbook.xlsx.write(res).then(()=>{
+        return workbook.xlsx.write(res).then(() => {
             res.status(200);
         });
     }
-    catch(err){
+    catch (err) {
         console.log(err.message);
     }
 });
